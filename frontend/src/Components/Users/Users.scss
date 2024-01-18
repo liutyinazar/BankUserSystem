@@ -1,9 +1,12 @@
-.users {
+.users,
+.banks {
     flex: 1;
     
-    .users-add {
+    .users-add,
+    .banks-add {
         display: flex;
         justify-content: end;
+        margin: 20px 0;
     }
     .title {
         margin: 20px;
@@ -14,11 +17,13 @@
         }
     }
 
-    .user {
+    .user,
+    .bank {
         list-style: none;
         padding: 0;
 
-        .user-info {
+        .user-info,
+        .bank-info {
             border-radius: 8px;
             display: flex;
             justify-content: center;
@@ -30,7 +35,11 @@
             .user-first_name,
             .user-last_name,
             .user-username,
-            .user-email {
+            .user-email,
+            .bank-id,
+            .bank-password,
+            .bank-routing_number,
+            .bank-swift_bic {
                 margin: 0;
                 width: 550px;
             }

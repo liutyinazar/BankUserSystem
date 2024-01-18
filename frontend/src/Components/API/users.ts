@@ -36,3 +36,17 @@ export const usersListData = async () => {
     }
   }
   
+  export const editUser = async (number: number, updatedUserData: any) => {
+    try {
+      const response = await axios.patch(
+        `${process.env.REACT_APP_API_URL}/api/v1/users/${number}/update/`,
+        updatedUserData
+      );
+      if (response.status !== 200 && response.status !== 204) {
+        return 'Error delete user. Please try again.';
+      }
+      return true
+    } catch (error) {
+      return 'Error sending request. Please try again.';
+    }
+  }

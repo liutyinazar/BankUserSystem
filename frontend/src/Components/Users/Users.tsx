@@ -1,12 +1,17 @@
 import "./Users.scss";
-import { Button, Flex, InputNumber, Modal, Space } from "antd";
 import { IUserData } from "../../types";
-import { usersListData, addUser, deleteUser } from "../api/users";
 import React, { useState, useEffect } from "react";
+import { Button, Flex, InputNumber, Modal, Space, Form, Input } from "antd";
+import { usersListData, addUser, editUser, deleteUser } from "../api/users";
 
 const Users = () => {
   const [usersData, setUsersData] = useState<IUserData[]>([]);
   const [value, setValue] = useState<number>(1);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editUserId, setEditUserId] = useState<number | null>(null);
+  const [updatedUserData, setUpdatedUserData] = useState<IUserData | null>(
+    null
+  );
 
   useEffect(() => {
     const fetchData = async () => {
@@ -47,18 +52,23 @@ const Users = () => {
     }
   };
 
-  const handleDeleteUser = async (number: number) => {
-    try {
-      const message = await deleteUser(number);
+  const handleEditUser = (userId: number) => {
+    setEditUserId(userId);
+    setIsEditModalOpen(true);
+    setUpdatedUserData(usersData.find((user) => user.id === userId) || null);
+  };
 
+  const handleDeleteUser = async (userId: number) => {
+    try {
+      const message = await deleteUser(userId);
       if (message === true) {
         Modal.success({
           title: "Success",
           content: "User deleted",
         });
+        const data: IUserData[] = await usersListData();
+        setUsersData(data);
       }
-      const data: IUserData[] = await usersListData();
-      setUsersData(data);
     } catch (error) {
       Modal.error({
         title: "Error delete user",
@@ -66,6 +76,45 @@ const Users = () => {
       });
     }
   };
+
+  const handleEditModalOk = async () => {
+
+    try {
+      if (updatedUserData) {
+        const message = await editUser(editUserId as number, updatedUserData);
+        console.log(message);
+
+        if (message === true) {
+          Modal.success({
+            title: "Success",
+            content: "User updated",
+          });
+          const data: IUserData[] = await usersListData();
+          setUsersData(data);
+          setIsEditModalOpen(false);
+          setUpdatedUserData(null);
+        } 
+      } else {
+        console.log('No updated data');
+        
+      }
+    } catch (error) {
+      Modal.error({
+        title: "Error updating user",
+        content: "Server error",
+      });
+    }
+  };
+
+  const handleEditModalCancel = () => {
+    setIsEditModalOpen(false);
+    setUpdatedUserData(null);
+  };
+
+  const handleFormChange = (changedValues: any, allValues: any) => {
+    setUpdatedUserData(allValues);
+  };
+
 
   return (
     <div className="container">
@@ -97,7 +146,9 @@ const Users = () => {
               <p className="user-username">{user.username}</p>
               <p className="user-email">{user.email}</p>
               <div className="buttons">
-                <Button type="primary">Edit</Button>
+                <Button type="primary" onClick={() => handleEditUser(user.id)}>
+                  Edit
+                </Button>
                 <Button danger onClick={() => handleDeleteUser(user.id)}>
                   Delete
                 </Button>
@@ -106,6 +157,50 @@ const Users = () => {
           ))}
         </ul>
       </div>
+
+      <Modal
+        title="Edit User"
+        visible={isEditModalOpen}
+        onOk={handleEditModalOk}
+        onCancel={handleEditModalCancel}
+      >
+        <Form
+          name="editUserForm"
+          initialValues={{
+            id: usersData.find((user) => user.id === editUserId)?.id,
+            password: usersData.find((user) => user.id === editUserId)
+              ?.password,
+            first_name: usersData.find((user) => user.id === editUserId)
+              ?.first_name,
+            last_name: usersData.find((user) => user.id === editUserId)
+              ?.last_name,
+            username: usersData.find((user) => user.id === editUserId)
+              ?.username,
+            email: usersData.find((user) => user.id === editUserId)?.email,
+          }}
+          onFinish={() => handleEditModalOk()}
+            onValuesChange={handleFormChange}
+        >
+          <Form.Item name="id" label="ID">
+            <Input disabled />
+          </Form.Item>
+          <Form.Item name="password" label="Password">
+            <Input />
+          </Form.Item>
+          <Form.Item name="first_name" label="First Name">
+            <Input />
+          </Form.Item>
+          <Form.Item name="last_name" label="Last Name">
+            <Input />
+          </Form.Item>
+          <Form.Item name="username" label="Username">
+            <Input />
+          </Form.Item>
+          <Form.Item name="email" label="Email">
+            <Input />
+          </Form.Item>
+        </Form>
+      </Modal>
     </div>
   );
 };

@@ -17,6 +17,8 @@ class BankUser(models.Model):
     password = models.CharField(max_length=100)
     email = models.EmailField()
 
+    banks = models.ManyToManyField(Bank, through='UserBankRelationship')
+
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
 

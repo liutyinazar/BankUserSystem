@@ -52,3 +52,20 @@ export const banksListData = async () => {
       return 'Error sending request. Please try again.';
     }
   }
+  
+  export const getUsersInBank = async (number: number): Promise<number> => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_URL}/api/v1/banks/${number}/users/`
+      );
+  
+      if (response.status === 200) {
+        const numberOfUsers = response.data.length;
+        return numberOfUsers;
+      }
+  
+      throw new Error('Error. Please try again.');
+    } catch (error) {
+      throw new Error('Error sending request. Please try again.');
+    }
+  }

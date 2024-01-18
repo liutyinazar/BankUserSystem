@@ -2,7 +2,7 @@ import "../Users/Users.scss";
 import { Button, Flex, InputNumber, Modal, Space, Form, Input } from "antd";
 
 import { IBankData } from "../../types";
-import { banksListData, addBank, editBank, deleteBank } from "../api/banks";
+import { banksListData, addBank, editBank, deleteBank, getUsersInBank } from "../api/banks";
 import React, { useState, useEffect } from "react";
 
 const Banks = () => {
@@ -13,6 +13,7 @@ const Banks = () => {
   const [updatedBankData, setUpdatedBankData] = useState<IBankData | null>(
     null
   );
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -61,23 +62,55 @@ const Banks = () => {
 
   const handleDeleteBank = async (bankId: number) => {
     try {
-      const message = await deleteBank(bankId);
-      if (message === true) {
-        Modal.success({
-          title: "Success",
-          content: "Bank deleted",
+      setLoading(true);
+      const usersInBank = await getUsersInBank(bankId);
+  
+      if (usersInBank > 0) {
+        Modal.error({
+          title: "Cannot delete bank",
+          content: `This bank has ${usersInBank} associated user(s). You cannot delete it.`,
         });
-        const data: IBankData[] = await banksListData();
-        setBanksData(data);
+      } else {
+        Modal.confirm({
+          title: "Delete Bank",
+          content: "Are you sure you want to delete this bank?",
+          okText: "Delete Anyway",
+          cancelText: "Cancel",
+          onOk: async () => {
+            try {
+              const message = await deleteBank(bankId);
+  
+              if (message === true) {
+                Modal.success({
+                  title: "Success",
+                  content: "Bank deleted",
+                });
+  
+                const data: IBankData[] = await banksListData();
+                setBanksData(data);
+              }
+            } catch (error) {
+              Modal.error({
+                title: "Error delete bank",
+                content: "Failed to delete bank. Please try again.",
+              });
+            } finally {
+              setLoading(false);
+            }
+          },
+          onCancel: () => {
+            setLoading(false);
+          },
+        });
       }
     } catch (error) {
       Modal.error({
         title: "Error delete bank",
-        content: "Server error",
+        content: "Server error. Please try again.",
       });
+      setLoading(false);
     }
   };
-
   const handleEditModalOk = async () => {
     try {
       if (updatedBankData) {

@@ -43,6 +43,12 @@ class BankDestroyView(generics.DestroyAPIView):
     queryset = Bank.objects.all()
     serializer_class = BankSerializer
 
+    def perform_destroy(self, instance):
+        if instance.userbankrelationship_set.exists():
+            return Response({"error": "Cannot delete a bank with associated users"}, status=status.HTTP_400_BAD_REQUEST)
+        instance.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 class UserView(generics.ListAPIView):
     queryset = BankUser.objects.all()
@@ -78,3 +84,11 @@ class UserUpdateView(generics.UpdateAPIView):
 class UserDestroyView(generics.DestroyAPIView):
     queryset = BankUser.objects.all()
     serializer_class = UserSerializer
+
+class UsersInBankView(generics.ListAPIView):
+    serializer_class = UserSerializer
+
+    def get_queryset(self):
+        bank_id = self.kwargs['bank_id']
+        queryset = BankUser.objects.filter(banks__id=bank_id)
+        return queryset

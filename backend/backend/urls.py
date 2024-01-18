@@ -10,7 +10,7 @@ from api.views import (
     BankDestroyView,
     BankRetrieveView,
     BankUpdateView,
-    
+    UsersInBankView,
 )
 
 urlpatterns = [
@@ -21,6 +21,11 @@ urlpatterns = [
     path("api/v1/banks/<int:pk>/", BankRetrieveView.as_view()),
     path("api/v1/banks/<int:pk>/update/", BankUpdateView.as_view()),
     path("api/v1/banks/<int:pk>/delete/", BankDestroyView.as_view()),
+    path(
+        "api/v1/banks/<int:bank_id>/users/",
+        UsersInBankView.as_view(),
+        name="bank-users",
+    ),
     # USERS
     path("api/v1/users/", UserView.as_view()),
     path("api/v1/users/create/", UserCreateView.as_view()),

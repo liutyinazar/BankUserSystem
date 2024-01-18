@@ -1,6 +1,45 @@
 .users {
-    .user-data {
+    flex: 1;
+    
+    .users-add {
         display: flex;
-        gap: 20px;
+        justify-content: end;
+    }
+    .title {
+        margin: 20px;
+        text-align: center;
+
+        h1 {
+            font-size: 24px;
+        }
+    }
+
+    .user {
+        list-style: none;
+        padding: 0;
+
+        .user-info {
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 10px 0 15px;
+
+            .user-id,
+            .user-password,
+            .user-first_name,
+            .user-last_name,
+            .user-username,
+            .user-email {
+                margin: 0;
+                width: 550px;
+            }
+
+            .buttons {
+                display: flex;
+                justify-content: space-between;
+                gap: 20px;
+            }
+        }
     }
 }

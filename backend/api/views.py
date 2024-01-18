@@ -1,13 +1,12 @@
 import os
 import requests
-from dotenv import load_dotenv
 from .models import Bank, BankUser
 from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .serializers import BankSerializer, UserSerializer
 
-load_dotenv()
+
 
 class BankView(generics.ListAPIView):
     queryset = Bank.objects.all()

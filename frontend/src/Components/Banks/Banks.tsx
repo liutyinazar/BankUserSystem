@@ -1,6 +1,6 @@
 import "./Banks.scss";
 import React, { useState, useEffect } from "react";
-import { banksListData } from "../API/banks";
+import { banksListData } from "../api/banks";
 import { IBankData } from "../../types";
 
 const Banks = () => {

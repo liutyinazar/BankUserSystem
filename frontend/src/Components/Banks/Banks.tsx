@@ -1,20 +1,25 @@
-import "../Users/Users.scss";
+import "../Users/UsersBanks.scss";
 import { Button, Flex, InputNumber, Modal, Space, Form, Input } from "antd";
 
 import { IBankData } from "../../types";
-import { banksListData, addBank, editBank, deleteBank, getUsersInBank } from "../api/banks";
+import {
+  banksListData,
+  addBank,
+  editBank,
+  deleteBank,
+  getUsersInBank,
+} from "../api/banks";
 import React, { useState, useEffect } from "react";
 
 const Banks = () => {
   const [banksData, setBanksData] = useState<IBankData[]>([]);
   const [value, setValue] = useState<number>(1);
+  const [usersInBank, setUsersInBank] = useState<string[]>([]);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editBankId, setEditBankId] = useState<number | null>(null);
   const [updatedBankData, setUpdatedBankData] = useState<IBankData | null>(
     null
   );
-  const [loading, setLoading] = useState(false);
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -26,7 +31,23 @@ const Banks = () => {
     };
 
     fetchData();
-  }, []);
+
+    if (editBankId !== null) {
+      const fetchUsersInBank = async () => {
+        try {
+          const usersCount: number = await getUsersInBank(editBankId);
+          const userNames = Array.from({ length: usersCount }, (_, index) =>
+            String(index + 1)
+          );
+          setUsersInBank(userNames);
+        } catch (error) {
+          console.error("Error fetching users in bank:", error);
+        }
+      };
+
+      fetchUsersInBank();
+    }
+  }, [editBankId]);
 
   const onChange = (newValue: number | null) => {
     setValue(newValue !== null ? newValue : 0);
@@ -62,9 +83,8 @@ const Banks = () => {
 
   const handleDeleteBank = async (bankId: number) => {
     try {
-      setLoading(true);
       const usersInBank = await getUsersInBank(bankId);
-  
+
       if (usersInBank > 0) {
         Modal.error({
           title: "Cannot delete bank",
@@ -79,13 +99,13 @@ const Banks = () => {
           onOk: async () => {
             try {
               const message = await deleteBank(bankId);
-  
+
               if (message === true) {
                 Modal.success({
                   title: "Success",
                   content: "Bank deleted",
                 });
-  
+
                 const data: IBankData[] = await banksListData();
                 setBanksData(data);
               }
@@ -94,12 +114,7 @@ const Banks = () => {
                 title: "Error delete bank",
                 content: "Failed to delete bank. Please try again.",
               });
-            } finally {
-              setLoading(false);
             }
-          },
-          onCancel: () => {
-            setLoading(false);
           },
         });
       }
@@ -108,7 +123,6 @@ const Banks = () => {
         title: "Error delete bank",
         content: "Server error. Please try again.",
       });
-      setLoading(false);
     }
   };
   const handleEditModalOk = async () => {
@@ -153,21 +167,23 @@ const Banks = () => {
         <div className="title">
           <h1>Banks List</h1>
         </div>
-        <div className="banks-add">
-          <Flex gap="small" wrap="wrap">
-            <InputNumber
-              min={1}
-              max={20}
-              value={value !== undefined ? value : null}
-              onChange={(newValue: number | null) => onChange(newValue)}
-            />
-            <Button type="primary" onClick={handleAddBank}>
-              Add Bank
-            </Button>
-          </Flex>
-          <Space></Space>
-        </div>
+
         <ul className="bank">
+          <div className="banks-add">
+            <Flex gap="small" wrap="wrap">
+              <InputNumber
+                min={1}
+                max={20}
+                value={value !== undefined ? value : null}
+                onChange={(newValue: number | null) => onChange(newValue)}
+              />
+              <Button type="primary" onClick={handleAddBank}>
+                Add Bank
+              </Button>
+            </Flex>
+            <Space></Space>
+          </div>
+
           {banksData.map((bank) => (
             <li key={bank.id} className="bank-info">
               <p className="bank-id">{bank.id}</p>
@@ -198,9 +214,9 @@ const Banks = () => {
             id: banksData.find((bank) => bank.id === editBankId)?.id,
             bank_name: banksData.find((bank) => bank.id === editBankId)
               ?.bank_name,
-              routing_number: banksData.find((bank) => bank.id === editBankId)
+            routing_number: banksData.find((bank) => bank.id === editBankId)
               ?.routing_number,
-              swift_bic: banksData.find((bank) => bank.id === editBankId)
+            swift_bic: banksData.find((bank) => bank.id === editBankId)
               ?.swift_bic,
           }}
           onFinish={() => handleEditModalOk()}
@@ -217,6 +233,17 @@ const Banks = () => {
           </Form.Item>
           <Form.Item name="swift_bic" label="Swift Bic">
             <Input />
+          </Form.Item>
+          <Form.Item label="Users in Bank">
+            {usersInBank.length > 0 ? (
+              <ul>
+                {usersInBank.map((user, index) => (
+                  <li key={index}>{user}</li>
+                ))}
+              </ul>
+            ) : (
+              <p>No users in this bank.</p>
+            )}
           </Form.Item>
         </Form>
       </Modal>

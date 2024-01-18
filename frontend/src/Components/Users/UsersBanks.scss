@@ -1,0 +1,75 @@
+.banks,
+.users {
+  .title {
+    text-align: center;
+    font-size: 24px;
+    padding: 25px;
+  }
+
+  .bank,
+  .user {
+    list-style-type: none;
+    padding: 0;
+
+    .type-user-info,
+    .type-bank-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px;
+      margin-bottom: 10px;
+      background-color: none;
+      transition: background-color 1s;
+    }
+
+    .banks-add,
+    .users-add {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 20px;
+    }
+
+    &-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px;
+      margin-bottom: 10px;
+      background-color: none;
+      transition: background-color 1s;
+
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.04);
+        transition: background-color 0.4s;
+      }
+
+      p {
+        margin: 0;
+        flex: 1;
+
+        &.bank-id,
+        &.user-id {
+          flex: 0.5;
+        }
+
+        &.bank-name,
+        &.user-password,
+        &.bank-swift_bic,
+        &.bank-routing_number,
+        &.user-first_name,
+        &.user-last_name,
+        &.user-username,
+        &.user-email {
+          flex: 2;
+        }
+      }
+
+      .buttons {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+      }
+    }
+  }
+}

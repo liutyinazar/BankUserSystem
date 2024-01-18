@@ -1,4 +1,4 @@
-import "./Users.scss";
+import "./UsersBanks.scss";
 import { IUserData } from "../../types";
 import React, { useState, useEffect } from "react";
 import { Button, Flex, InputNumber, Modal, Space, Form, Input } from "antd";
@@ -78,7 +78,6 @@ const Users = () => {
   };
 
   const handleEditModalOk = async () => {
-
     try {
       if (updatedUserData) {
         const message = await editUser(editUserId as number, updatedUserData);
@@ -93,10 +92,9 @@ const Users = () => {
           setUsersData(data);
           setIsEditModalOpen(false);
           setUpdatedUserData(null);
-        } 
+        }
       } else {
-        console.log('No updated data');
-        
+        console.log("No updated data");
       }
     } catch (error) {
       Modal.error({
@@ -115,28 +113,29 @@ const Users = () => {
     setUpdatedUserData(allValues);
   };
 
-
   return (
     <div className="container">
       <div className="users">
         <div className="title">
           <h1>Users List</h1>
         </div>
-        <div className="users-add">
-          <Flex gap="small" wrap="wrap">
-            <InputNumber
-              min={1}
-              max={20}
-              value={value !== undefined ? value : null}
-              onChange={(newValue: number | null) => onChange(newValue)}
-            />
-            <Button type="primary" onClick={handleAddUser}>
-              Add User
-            </Button>
-          </Flex>
-          <Space></Space>
-        </div>
+
         <ul className="user">
+          <div className="users-add">
+            <Flex gap="small" wrap="wrap">
+              <InputNumber
+                min={1}
+                max={20}
+                value={value !== undefined ? value : null}
+                onChange={(newValue: number | null) => onChange(newValue)}
+              />
+              <Button type="primary" onClick={handleAddUser}>
+                Add User
+              </Button>
+            </Flex>
+            <Space></Space>
+          </div>
+
           {usersData.map((user) => (
             <li key={user.id} className="user-info">
               <p className="user-id">{user.id}</p>
@@ -179,7 +178,7 @@ const Users = () => {
             email: usersData.find((user) => user.id === editUserId)?.email,
           }}
           onFinish={() => handleEditModalOk()}
-            onValuesChange={handleFormChange}
+          onValuesChange={handleFormChange}
         >
           <Form.Item name="id" label="ID">
             <Input disabled />

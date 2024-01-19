@@ -12,14 +12,17 @@ class BankView(generics.ListAPIView):
     queryset = Bank.objects.all()
     serializer_class = BankSerializer
 
-class BankCreateView(APIView):
+class BaseCreateView(APIView):
+    data_endpoint = None
+    serializer_class = None
+
     def post(self, request, *args, **kwargs):
-        data_url = f'{os.getenv("RANDOM_DATA_URL")}/banks'
+        data_url = f'{os.getenv("RANDOM_DATA_URL")}/{self.data_endpoint}'
         response = requests.get(data_url)
         
         if response.status_code == 200:
             data = response.json()
-            serializer = BankSerializer(data=data)
+            serializer = self.serializer_class(data=data)
 
             if serializer.is_valid():
                 serializer.save()
@@ -28,6 +31,14 @@ class BankCreateView(APIView):
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response({"error": "Unable to fetch data from external URL"}, status=response.status_code)
+
+class UserCreateView(BaseCreateView):
+    data_endpoint = 'users'
+    serializer_class = UserSerializer
+
+class BankCreateView(BaseCreateView):
+    data_endpoint = 'banks'
+    serializer_class = BankSerializer
 
 class BankRetrieveView(generics.RetrieveAPIView):
     queryset = Bank.objects.all()
@@ -53,23 +64,6 @@ class BankDestroyView(generics.DestroyAPIView):
 class UserView(generics.ListAPIView):
     queryset = BankUser.objects.all()
     serializer_class = UserSerializer
-
-class UserCreateView(APIView):
-    def post(self, request, *args, **kwargs):
-        data_url = f'{os.getenv("RANDOM_DATA_URL")}/users'
-        response = requests.get(data_url)
-        
-        if response.status_code == 200:
-            data = response.json()
-            serializer = UserSerializer(data=data)
-
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
-            else:
-                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        else:
-            return Response({"error": "Unable to fetch data from external URL"}, status=response.status_code)
 
 class UserRetrieveView(generics.RetrieveAPIView):
     queryset = BankUser.objects.all()

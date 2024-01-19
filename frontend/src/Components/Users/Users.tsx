@@ -1,8 +1,8 @@
 import "./UsersBanks.scss";
 import { IUserData } from "../../types";
 import React, { useState, useEffect } from "react";
-import { Button, Flex, InputNumber, Modal, Space, Form, Input } from "antd";
 import { usersListData, addUser, editUser, deleteUser } from "../api/users";
+import { Button, Flex, InputNumber, Modal, Form, Input, Progress } from "antd";
 
 const Users = () => {
   const [usersData, setUsersData] = useState<IUserData[]>([]);
@@ -12,6 +12,9 @@ const Users = () => {
   const [updatedUserData, setUpdatedUserData] = useState<IUserData | null>(
     null
   );
+
+  const [showProgress, setShowProgress] = useState(false);
+  const [progress, setProgress] = useState<number>(0);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -32,23 +35,32 @@ const Users = () => {
 
   const handleAddUser = async () => {
     try {
-      const message = await addUser(value);
+      setShowProgress(true);
+      setProgress(0);
+  
+      const message = await addUser(value, setProgress);
       if (message === true) {
         Modal.success({
           title: "Success",
           content: `You add ${value} users`,
+          onOk: () => {}, // порожня функція зворотнього виклику
         });
         const data: IUserData[] = await usersListData();
         setUsersData(data);
       } else {
         Modal.error({
           title: "Error adding user",
+          onOk: () => {}, // порожня функція зворотнього виклику
         });
       }
     } catch (error) {
       Modal.error({
         title: "Error adding user",
+        onOk: () => {}, // порожня функція зворотнього виклику
       });
+    } finally {
+      setShowProgress(false);
+      setProgress(0);
     }
   };
 
@@ -121,6 +133,13 @@ const Users = () => {
         </div>
 
         <ul className="user">
+          {showProgress && (
+            <Progress
+              type="circle"
+              percent={progress}
+              format={() => `${progress}%`}
+            />
+          )}
           <div className="users-add">
             <Flex gap="small" wrap="wrap">
               <InputNumber
@@ -133,7 +152,6 @@ const Users = () => {
                 Add User
               </Button>
             </Flex>
-            <Space></Space>
           </div>
 
           {usersData.map((user) => (

@@ -1,8 +1,9 @@
-import axios from 'axios'
+import {client} from '../api/index'
+
 
 export const banksListData = async () => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/v1/banks/`);
+      const response = await client.get(`/api/v1/banks/`);
       return(response.data);
 
     } catch (error) {
@@ -12,15 +13,21 @@ export const banksListData = async () => {
     } 
   };
 
-  export const addBank = async (number: number) => {
+  export const addBank = async (number: number, setProgress: (progress: number) => void) => {
     try {
+      const increment = 100 / number;
+  
       for (let i = 0; i < number; i++) {
-        const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/v1/banks/create/`);
+        const response = await client.post(`/api/v1/banks/create/`);
         if (response.status !== 200 && response.status !== 201) {
           return 'Error adding bank. Please try again.';
         }
+  
+        const roundedProgress = Math.round((i + 1) * increment);
+        setProgress(roundedProgress);
       }
-      return true
+  
+      return true;
     } catch (error) {
       return 'Error sending request. Please try again.';
     }
@@ -28,7 +35,7 @@ export const banksListData = async () => {
 
   export const deleteBank = async (number: number) => {
     try {
-      const response = await axios.delete(`${process.env.REACT_APP_API_URL}/api/v1/banks/${number}/delete/`)
+      const response = await client.delete(`/api/v1/banks/${number}/delete/`)
       if (response.status !== 200 && response.status !== 204) {
         return 'Error delete bank. Please try again.';
       }
@@ -40,8 +47,8 @@ export const banksListData = async () => {
   
   export const editBank = async (number: number, updatedBankData: any) => {
     try {
-      const response = await axios.patch(
-        `${process.env.REACT_APP_API_URL}/api/v1/banks/${number}/update/`,
+      const response = await client.patch(
+        `/api/v1/banks/${number}/update/`,
         updatedBankData
       );
       if (response.status !== 200 && response.status !== 204) {
@@ -52,11 +59,11 @@ export const banksListData = async () => {
       return 'Error sending request. Please try again.';
     }
   }
-  
+
   export const getUsersInBank = async (number: number): Promise<number> => {
     try {
-      const response = await axios.get(
-        `${process.env.REACT_APP_API_URL}/api/v1/banks/${number}/users/`
+      const response = await client.get(
+        `/api/v1/banks/${number}/users/`
       );
   
       if (response.status === 200) {

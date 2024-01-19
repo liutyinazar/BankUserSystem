@@ -1,8 +1,8 @@
-import axios from 'axios'
+import {client} from '../api/index'
 
 export const usersListData = async () => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/v1/users/`);
+      const response = await client.get(`${process.env.REACT_APP_API_URL}/api/v1/users/`);
       return(response.data);
 
     } catch (error) {
@@ -10,23 +10,29 @@ export const usersListData = async () => {
     } 
   };
 
-  export const addUser = async (number: number) => {
+  export const addUser = async (number: number, setProgress: (progress: number) => void) => {
     try {
+      const increment = 100 / number;
+  
       for (let i = 0; i < number; i++) {
-        const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/v1/users/create/`);
+        const response = await client.post(`${process.env.REACT_APP_API_URL}/api/v1/users/create/`);
+        
         if (response.status !== 200 && response.status !== 201) {
           return 'Error adding user. Please try again.';
         }
+        const roundedProgress = Math.round((i + 1) * increment);
+        setProgress(roundedProgress);
       }
-      return true
+  
+      return true;
     } catch (error) {
       return 'Error sending request. Please try again.';
     }
-  }
+  };
 
   export const deleteUser = async (number: number) => {
     try {
-      const response = await axios.delete(`${process.env.REACT_APP_API_URL}/api/v1/users/${number}/delete/`)
+      const response = await client.delete(`${process.env.REACT_APP_API_URL}/api/v1/users/${number}/delete/`)
       if (response.status !== 200 && response.status !== 204) {
         return 'Error delete user. Please try again.';
       }
@@ -38,7 +44,7 @@ export const usersListData = async () => {
   
   export const editUser = async (number: number, updatedUserData: any) => {
     try {
-      const response = await axios.patch(
+      const response = await client.patch(
         `${process.env.REACT_APP_API_URL}/api/v1/users/${number}/update/`,
         updatedUserData
       );

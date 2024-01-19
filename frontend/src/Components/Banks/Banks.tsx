@@ -1,5 +1,5 @@
 import "../Users/UsersBanks.scss";
-import { Button, Flex, InputNumber, Modal, Space, Form, Input } from "antd";
+import { Button, Flex, InputNumber, Modal, Form, Input, Progress } from "antd";
 
 import { IBankData } from "../../types";
 import {
@@ -20,6 +20,10 @@ const Banks = () => {
   const [updatedBankData, setUpdatedBankData] = useState<IBankData | null>(
     null
   );
+
+  const [progress, setProgress] = useState<number>(0);
+  const [showProgress, setShowProgress] = useState(false);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -54,8 +58,10 @@ const Banks = () => {
   };
 
   const handleAddBank = async () => {
+    setProgress(0);
+    setShowProgress(true);
     try {
-      const message = await addBank(value);
+      const message = await addBank(value, setProgress);
       if (message === true) {
         Modal.success({
           title: "Success",
@@ -67,11 +73,13 @@ const Banks = () => {
         Modal.error({
           title: "Error adding bank",
         });
-      }
+      } 
     } catch (error) {
       Modal.error({
         title: "Error adding bank",
       });
+    } finally {
+      setShowProgress(false);
     }
   };
 
@@ -169,6 +177,7 @@ const Banks = () => {
         </div>
 
         <ul className="bank">
+        {showProgress && <Progress type="circle" percent={progress} />}
           <div className="banks-add">
             <Flex gap="small" wrap="wrap">
               <InputNumber
@@ -181,7 +190,6 @@ const Banks = () => {
                 Add Bank
               </Button>
             </Flex>
-            <Space></Space>
           </div>
 
           {banksData.map((bank) => (

@@ -17,7 +17,7 @@ class BaseCreateView(APIView):
     serializer_class = None
 
     def post(self, request, *args, **kwargs):
-        data_url = f'{os.getenv("RANDOM_DATA_URL")}/{self.data_endpoint}'
+        data_url = f'https://random-data-api.com/api/v2/{self.data_endpoint}'
         response = requests.get(data_url)
         
         if response.status_code == 200:

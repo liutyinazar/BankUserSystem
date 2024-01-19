@@ -1,7 +1,7 @@
 import "./UsersBanks.scss";
 import { IUserData } from "../../types";
 import React, { useState, useEffect } from "react";
-import { usersListData, addUser, editUser, deleteUser } from "../api/users";
+import { usersListData, addUser, editUser, deleteUser } from "../API/users";
 import { Button, Flex, InputNumber, Modal, Form, Input, Progress } from "antd";
 
 const Users = () => {

@@ -1,4 +1,4 @@
-import {client} from '../api/index'
+import {client} from '../API/index'
 
 export const usersListData = async () => {
     try {

@@ -8,7 +8,7 @@ import {
   editBank,
   deleteBank,
   getUsersInBank,
-} from "../api/banks";
+} from "../API/banks";
 import React, { useState, useEffect } from "react";
 
 const Banks = () => {

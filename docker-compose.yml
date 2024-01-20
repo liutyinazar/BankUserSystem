@@ -5,7 +5,7 @@ services:
   backend:
     build:
       context: .
-      dockerfile: docker-compose/backend/Dockerfile
+      dockerfile: backend/Dockerfile
     ports:
       - 8000:8000
     volumes:
@@ -18,7 +18,7 @@ services:
   frontend:
     build:
       context: .
-      dockerfile: docker-compose/frontend/Dockerfile
+      dockerfile: frontend/Dockerfile
     env_file:
       - frontend/.env
     ports:

@@ -195,9 +195,9 @@ const Banks = () => {
           {banksData.map((bank) => (
             <li key={bank.id} className="bank-info">
               <p className="bank-id">{bank.id}</p>
-              <p className="bank-name">{bank.bankName}</p>
-              <p className="bank-routing_number">{bank.routingNumber}</p>
-              <p className="bank-swift_bic">{bank.swiftBic}</p>
+              <p className="bank-name">{bank.bank_name}</p>
+              <p className="bank-routing_number">{bank.routing_number}</p>
+              <p className="bank-swift_bic">{bank.swift_bic}</p>
               <div className="buttons">
                 <Button type="primary" onClick={() => handleEditBank(bank.id)}>
                   Edit
@@ -221,11 +221,11 @@ const Banks = () => {
           initialValues={{
             id: banksData.find((bank) => bank.id === editBankId)?.id,
             bank_name: banksData.find((bank) => bank.id === editBankId)
-              ?.bankName,
+              ?.bank_name,
             routing_number: banksData.find((bank) => bank.id === editBankId)
-              ?.routingNumber,
+              ?.routing_number,
             swift_bic: banksData.find((bank) => bank.id === editBankId)
-              ?.swiftBic,
+              ?.swift_bic,
           }}
           onFinish={() => handleEditModalOk()}
           onValuesChange={handleFormChange}

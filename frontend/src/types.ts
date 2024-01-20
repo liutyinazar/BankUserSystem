@@ -9,7 +9,7 @@ export interface IUserData {
 
 export interface IBankData {
     id: number;
-    bankName: string;
-    routingNumber: string;
-    swiftBic: string;
+    bank_name: string;
+    routing_number: string;
+    swift_bic: string;
 }

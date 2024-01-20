@@ -39,3 +39,4 @@ This will set up the Django backend, React frontend, and PostgreSQL database.
 Backend: http://localhost:8000/
 
 Frontend: http://localhost:3000/
+

@@ -29,7 +29,7 @@ cd BankUserSystem
 3. Build and run the Docker containers:
 
 ```bash
-docker-compose up --build
+docker-compose up
 ```
 
 This will set up the Django backend, React frontend, and PostgreSQL database.

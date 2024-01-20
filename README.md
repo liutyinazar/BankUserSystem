@@ -20,7 +20,7 @@ Docker installed on your machine
 1. Clone the Git repository:
 
 ```bash
-git clone https://github.com/your-username/project.git](https://github.com/liutyinazar/BankUserSystem.git
+git clone https://github.com/liutyinazar/BankUserSystem.git
 cd BankUserSystem
 ```
 

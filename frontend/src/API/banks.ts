@@ -1,4 +1,5 @@
 import {client} from '../API/index'
+import { IBankData } from '../types';
 
 
 export const banksListData = async () => {
@@ -14,6 +15,7 @@ export const banksListData = async () => {
   };
 
   export const addBank = async (number: number, setProgress: (progress: number) => void) => {
+    // Convert to batch
     try {
       const increment = 100 / number;
   
@@ -45,7 +47,7 @@ export const banksListData = async () => {
     }
   }
   
-  export const editBank = async (number: number, updatedBankData: any) => {
+  export const editBank = async (number: number, updatedBankData: IBankData) => {
     try {
       const response = await client.patch(
         `/api/v1/banks/${number}/update/`,
@@ -60,7 +62,7 @@ export const banksListData = async () => {
     }
   }
 
-  export const getUsersInBank = async (number: number): Promise<number> => {
+  export const getUsersCountByBank = async (number: number): Promise<number> => {
     try {
       const response = await client.get(
         `/api/v1/banks/${number}/users/`

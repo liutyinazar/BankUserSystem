@@ -1,7 +1,7 @@
 import "./UsersBanks.scss";
 import { IUserData } from "../../types";
 import React, { useState, useEffect } from "react";
-import { usersListData, addUser, editUser, deleteUser } from "../API/users";
+import { usersListData, addUser, editUser, deleteUser } from "../../API/users";
 import { Button, Flex, InputNumber, Modal, Form, Input, Progress } from "antd";
 
 const Users = () => {
@@ -158,8 +158,8 @@ const Users = () => {
             <li key={user.id} className="user-info">
               <p className="user-id">{user.id}</p>
               <p className="user-password">{user.password}</p>
-              <p className="user-first_name">{user.first_name}</p>
-              <p className="user-last_name">{user.last_name}</p>
+              <p className="user-first_name">{user.firstName}</p>
+              <p className="user-last_name">{user.lastName}</p>
               <p className="user-username">{user.username}</p>
               <p className="user-email">{user.email}</p>
               <div className="buttons">
@@ -188,9 +188,9 @@ const Users = () => {
             password: usersData.find((user) => user.id === editUserId)
               ?.password,
             first_name: usersData.find((user) => user.id === editUserId)
-              ?.first_name,
+              ?.firstName,
             last_name: usersData.find((user) => user.id === editUserId)
-              ?.last_name,
+              ?.lastName,
             username: usersData.find((user) => user.id === editUserId)
               ?.username,
             email: usersData.find((user) => user.id === editUserId)?.email,

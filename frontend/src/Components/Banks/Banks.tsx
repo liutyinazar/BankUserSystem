@@ -7,8 +7,8 @@ import {
   addBank,
   editBank,
   deleteBank,
-  getUsersInBank,
-} from "../API/banks";
+  getUsersCountByBank,
+} from "../../API/banks";
 import React, { useState, useEffect } from "react";
 
 const Banks = () => {
@@ -39,7 +39,7 @@ const Banks = () => {
     if (editBankId !== null) {
       const fetchUsersInBank = async () => {
         try {
-          const usersCount: number = await getUsersInBank(editBankId);
+          const usersCount: number = await getUsersCountByBank(editBankId);
           const userNames = Array.from({ length: usersCount }, (_, index) =>
             String(index + 1)
           );
@@ -91,7 +91,7 @@ const Banks = () => {
 
   const handleDeleteBank = async (bankId: number) => {
     try {
-      const usersInBank = await getUsersInBank(bankId);
+      const usersInBank = await getUsersCountByBank(bankId);
 
       if (usersInBank > 0) {
         Modal.error({
@@ -195,9 +195,9 @@ const Banks = () => {
           {banksData.map((bank) => (
             <li key={bank.id} className="bank-info">
               <p className="bank-id">{bank.id}</p>
-              <p className="bank-name">{bank.bank_name}</p>
-              <p className="bank-routing_number">{bank.routing_number}</p>
-              <p className="bank-swift_bic">{bank.swift_bic}</p>
+              <p className="bank-name">{bank.bankName}</p>
+              <p className="bank-routing_number">{bank.routingNumber}</p>
+              <p className="bank-swift_bic">{bank.swiftBic}</p>
               <div className="buttons">
                 <Button type="primary" onClick={() => handleEditBank(bank.id)}>
                   Edit
@@ -221,11 +221,11 @@ const Banks = () => {
           initialValues={{
             id: banksData.find((bank) => bank.id === editBankId)?.id,
             bank_name: banksData.find((bank) => bank.id === editBankId)
-              ?.bank_name,
+              ?.bankName,
             routing_number: banksData.find((bank) => bank.id === editBankId)
-              ?.routing_number,
+              ?.routingNumber,
             swift_bic: banksData.find((bank) => bank.id === editBankId)
-              ?.swift_bic,
+              ?.swiftBic,
           }}
           onFinish={() => handleEditModalOk()}
           onValuesChange={handleFormChange}

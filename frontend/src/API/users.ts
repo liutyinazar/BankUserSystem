@@ -1,4 +1,5 @@
 import {client} from '../API/index'
+import { IUserData } from '../types';
 
 export const usersListData = async () => {
     try {
@@ -11,6 +12,7 @@ export const usersListData = async () => {
   };
 
   export const addUser = async (number: number, setProgress: (progress: number) => void) => {
+    // Convert to batch
     try {
       const increment = 100 / number;
   
@@ -42,7 +44,7 @@ export const usersListData = async () => {
     }
   }
   
-  export const editUser = async (number: number, updatedUserData: any) => {
+  export const editUser = async (number: number, updatedUserData: IUserData) => {
     try {
       const response = await client.patch(
         `api/v1/users/${number}/update/`,

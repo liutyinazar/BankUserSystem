@@ -1,13 +1,12 @@
-FROM python
+FROM python:3.9.1-buster
 
-ENV PYTHONUNBUFFERED 1
-ENV PYTHONDONTWRITEBYTECODE 1
+WORKDIR /app
+
+COPY backend/ /app
+RUN pip install -r requirements.txt
 
 
-WORKDIR /app/backend
-COPY requirements.txt /app/backend
-RUN pip install --upgrade pip
-RUN pip3 install -r requirements.txt
+COPY docker-compose/backend/entrypoint.sh /
+RUN chmod +x /entrypoint.sh
 
-EXPOSE 8000
-CMD ["python3", "manage.py", "runserver", "0.0.0.0:8000"]
+ENTRYPOINT /entrypoint.sh

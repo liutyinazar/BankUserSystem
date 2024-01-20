@@ -1,8 +1,13 @@
-FROM node
+FROM node:lts-alpine
 
-WORKDIR /app/frontend
-COPY package.json /app/frontend
+ENV CHOKIDAR_USEPOLLING=true
+
+WORKDIR /app
+
+COPY frontend/package*.json ./
 
 RUN npm install
-EXPOSE 3000
-CMD ["npm", "start"]
+
+COPY frontend/ .
+
+ENTRYPOINT npm start

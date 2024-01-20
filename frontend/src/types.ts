@@ -1,15 +1,15 @@
 export interface IUserData {
     id: number;
     password: string;
-    first_name: string;
-    last_name: string;
+    firstName: string;
+    lastName: string;
     username: string;
     email: string;
 }
 
 export interface IBankData {
     id: number;
-    bank_name: string;
-    routing_number: string;
-    swift_bic: string;
+    bankName: string;
+    routingNumber: string;
+    swiftBic: string;
 }

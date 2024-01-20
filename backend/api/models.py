@@ -24,8 +24,8 @@ class BankUser(models.Model):
 
 
 class UserBankRelationship(models.Model):
-    user = models.ForeignKey(BankUser, on_delete=models.CASCADE)
-    bank = models.ForeignKey(Bank, on_delete=models.CASCADE)
+    user = models.ForeignKey('BankUser', on_delete=models.CASCADE)
+    bank = models.ForeignKey('Bank', on_delete=models.PROTECT)
 
     def __str__(self):
         return f"{self.user} {self.bank}"

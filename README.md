@@ -40,16 +40,3 @@ Backend: http://localhost:8000/
 
 Frontend: http://localhost:3000/
 
-## Deployment
-
-To deploy the project to a production environment, follow these steps:
-
-1. Set the necessary environment variables (e.g., database credentials, API keys) in the .env file.
-
-2. Build and run the Docker containers in production mode:
-
-```bash
-docker-compose -f docker-compose.prod.yml up --build
-```
-
-3. The application will be accessible based on your production environment configurations.
